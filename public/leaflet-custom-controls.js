@@ -107,6 +107,10 @@ L.Control.ElectionSelector = L.Control.extend({
         L.DomUtil.empty(this._choiceSelector);
         this._addChoices(this._contests[this._contestSelector.value].choices);
         this._layer.setStyle(this._createStyle());
+        this._layer._map.flyToBounds(this._layer.getLayers().reduce((bounds, feature) => {
+            if(this._contests[this.selection.contest].precincts[feature.feature.properties.PrecinctID]) bounds.push(feature.getBounds());
+            return bounds;
+        }, []));
     },
 
     _choiceChanged: function() {
