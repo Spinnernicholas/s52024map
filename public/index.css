@@ -62,3 +62,9 @@ p.popup-title{
   font-weight: bold;
   text-align: center;
 }
+
+P.popup-subtitle{
+  margin: 0;
+  font-weight: bold;
+  text-align: center;
+}
