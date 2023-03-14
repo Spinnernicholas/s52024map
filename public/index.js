@@ -28,7 +28,7 @@ let precinctsLayer;
                     let precinct = contest.precincts[e.target.feature.properties.PrecinctID];
                     e.target.setStyle({
                         weight: 2,
-                        color: "#FFFFFF"
+                        color: getBorderColor(e.target.options.fillColor)
                     }).bringToFront();
                     
                     let content = "";
@@ -84,4 +84,11 @@ async function loadData(){
 async function loadJson(file) {
     let response = await fetch(file);
     return await response.json();
+}
+
+function getBorderColor(input){
+    if(!input) return 'white';
+
+    if(chroma(input).get('hsl.l') < 0.8) return 'white';
+    else return 'black';
 }
