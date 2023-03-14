@@ -1,4 +1,4 @@
-const map = L.map('map', {preferCanvas: false}).setView([37.93, -121.95], 11);
+const map = L.map('map', {preferCanvas: false});
 
 let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -75,6 +75,8 @@ let precinctsLayer;
     }).addTo(map);
     
     let selector = L.control.ElectionSelector(precinctsLayer, data.contests).addTo(map);
+
+    map.fitBounds(precinctsLayer.getBounds());
 })();
 
 async function loadData(){
