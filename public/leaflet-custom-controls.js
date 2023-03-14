@@ -40,6 +40,13 @@ L.Control.ElectionSelector = L.Control.extend({
                     L.DomEvent.off(container, 'mousedown', L.DomEvent.preventDefault);
                 });
             },
+            mousedown: function () {
+                L.DomEvent.on(container, 'mousedown', L.DomEvent.preventDefault);
+                this._open();
+                setTimeout(function () {
+                    L.DomEvent.off(container, 'mousedown', L.DomEvent.preventDefault);
+                });
+            },
             mouseleave: function (e) {
                 if(e.relatedTarget === null || container.contains(e.relatedTarget)) e.stopPropagation();
                 else this._close();
