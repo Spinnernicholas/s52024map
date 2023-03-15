@@ -102,6 +102,9 @@ L.Control.ElectionSelector = L.Control.extend({
         let option = L.DomUtil.create('option', 'election-selector-option', this._choiceSelector);
         option.value = "w"
         option.textContent = "WINNER BY PRECINCT";
+        option = L.DomUtil.create('option', 'election-selector-option', this._choiceSelector);
+        option.value = "t"
+        option.textContent = "CONTEST TURNOUT";
         choices.forEach((ch, i) => {
             let option = L.DomUtil.create('option', 'election-selector-option', this._choiceSelector);
             option.value = i;
@@ -132,19 +135,25 @@ L.Control.ElectionSelector = L.Control.extend({
             choice: this._choiceSelector.value
         };
 
-        if(selection.choice !== "w") return feature => {
+        if(selection.choice === "w") return feature => {
             let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
             if(!precinct.results) return this._buildStyle(this.styleHidden);
-            return this._buildStyle({fillColor: this._colorScale(precinct.percentage[selection.choice])});
+            return this._buildStyle({fillColor: this._colorClassifier[precinct.winner]});
+        };
+        if(selection.choice === "t") return feature => {
+            let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
+            if(!precinct) return this.styleBlank;
+            if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
+            return this._buildStyle({fillColor: this._colorScale(precinct.total/precinct.registeredVoters)});
         };
         return feature => {
             let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
             if(!precinct.results) return this._buildStyle(this.styleHidden);
-            return this._buildStyle({fillColor: this._colorClassifier[precinct.winner]});
+            return this._buildStyle({fillColor: this._colorScale(precinct.percentage[selection.choice])});
         };
     },
 

@@ -39,6 +39,9 @@ let precinctsLayer;
                         if(precinct.registeredVoters == 0 && precinct.total == 0) content += "No Registered Voters<br/>";
                         else {
                             if(precinct.total == 0) content += "No Votes<br/";
+                            else if(selector.selection.choice === 't') content += `
+                                Total Votes: ${precinct.total}<br/>
+                                `;
                             else if(!precinct.results) content += `
                                 Hidden for Privacy<br/>
                                 Total Votes: ${precinct.total}<br/>
