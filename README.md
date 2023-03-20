@@ -1,7 +1,9 @@
 # CocoaCountyMap
-This is an interactive map for the [Contra Costa County](https://www.contracosta.ca.gov/) Election Results for the 2022 General Election. A secondary goal of this project is to provide a template that can be used to quickly and easily create interactive election maps for any election.
+This is an interactive election map with the goal of providing a template that can be used to quickly and easily create interactive election maps for any election.
 
 Try it out [Here](https://spinnernicholas.github.io/CocoaCountyMap/public/index.html)
+
+If you would like more informatino or a demo, please reach out to me on [Twitter](https://twitter.com/NicholasSpinner) or [LinkedIn](https://www.linkedin.com/in/spinnernicholas/).
 
 # Support This Project
 Please consider supporting this project with a donation. 100% of the proceeds will go towards the continued development of the Interactive Map Project.
@@ -28,9 +30,15 @@ Payment Processing Fees | -$1.21
 #### For Developers
 - [ ] Standardize and document election data format
 
+# Data Specification
+File Specification can be found [HERE](dataSpecification.md)
+
 # Cedits
 Built with [Leafletjs](https://leafletjs.com/)
 
 BaseMap provided by [OpenStreetMap](https://www.openstreetmap.org/)
 
-Special thanks to the [Contra Costa County Elections Division](https://www.cocovote.us/)
+## County Elections Departments
+[Contra Costa County Elections](https://www.cocovote.us/)
+
+[Marin County Elections](https://www.marincounty.org/depts/rv)
