@@ -2,13 +2,17 @@ L.Control.ElectionSelector = L.Control.extend({
     options: {
         position: 'bottomleft',
     },
-    initialize: function (layer, contests, options) {
+    initialize: function (title, layer, contests, precinctIDField, options) {
         this.selection = {};
+
+        this._title = title;
 
         this._opacity = 100;
         this._closed = false;
         this._layer = layer;
         this._contests = contests;
+        this._precinctIDField = precinctIDField;
+
         this._colorScale = chroma.scale(['white', '08306b']);
         this._colorClassifier = ['#1f78b4','#e31a1c','#33a02c','#ff7f00','#6a3d9a','#ffff99','#b15928','#a6cee3','#fb9a99','#b2df8a','#fdbf6f','#cab2d6'];
     },
@@ -67,7 +71,7 @@ L.Control.ElectionSelector = L.Control.extend({
 
         div.innerHTML = `
         <p>
-            <b>Contra Costa County General Election 2022 Interactive Map</b><br/>
+            <b>${this._title}</b><br/>
             Created by <a href="https://github.com/Spinnernicholas" target="_blank">Nick Spinner</a>
             Support this Project <a href="https://www.paypal.com/donate/?hosted_button_id=8TFKEHNMHW93N">Donate</a>
         </p>`;
@@ -119,7 +123,7 @@ L.Control.ElectionSelector = L.Control.extend({
         this._addChoices(this._contests[this._contestSelector.value].choices);
         this._layer.setStyle(this._createStyle());
         this._layer._map.flyToBounds(this._layer.getLayers().reduce((bounds, feature) => {
-            if(this._contests[this.selection.contest].precincts[feature.feature.properties.PrecinctID]) bounds.push(feature.getBounds());
+            if(this._contests[this.selection.contest].precincts[feature.feature.properties[this._precinctIDField]]) bounds.push(feature.getBounds());
             return bounds;
         }, []));
     },
@@ -136,20 +140,20 @@ L.Control.ElectionSelector = L.Control.extend({
         };
 
         if(selection.choice === "w") return feature => {
-            let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
+            let precinct = this._contests[selection.contest].precincts[feature.properties[this._precinctIDField]];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
             if(!precinct.results) return this._buildStyle(this.styleHidden);
             return this._buildStyle({fillColor: this._colorClassifier[precinct.winner]});
         };
         if(selection.choice === "t") return feature => {
-            let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
+            let precinct = this._contests[selection.contest].precincts[feature.properties[this._precinctIDField]];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
             return this._buildStyle({fillColor: this._colorScale(precinct.total/precinct.registeredVoters)});
         };
         return feature => {
-            let precinct = this._contests[selection.contest].precincts[feature.properties.PrecinctID];
+            let precinct = this._contests[selection.contest].precincts[feature.properties[this._precinctIDField]];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
             if(!precinct.results) return this._buildStyle(this.styleHidden);
@@ -176,6 +180,6 @@ L.Control.ElectionSelector = L.Control.extend({
     }
 });
 
-L.control.ElectionSelector = function(layer, contests, options) {
-    return new L.Control.ElectionSelector(layer, contests, options);
+L.control.ElectionSelector = function(title, layer, contests, precinctIDField, options) {
+    return new L.Control.ElectionSelector(title, layer, contests, precinctIDField, options);
 }

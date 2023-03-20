@@ -1,3 +1,9 @@
+const pageTitle = 'Contra Costa County 2022 General Election Results';
+const precinctIDField = 'PrecinctID';
+const precinctLabelField = 'PrecinctID';
+const grouped = false;
+const additionalGISData = false;
+
 const map = L.map('map', {preferCanvas: false});
 
 let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -5,11 +11,13 @@ let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-let data = {};
-let precinctsLayer;
+let data, precinctsLayer;
 
 (async () => {
-    data = await loadData();
+    let addData;
+
+    data = await loadJson("data/data.json");
+    if(additionalGISData) addData = await loadJson("data/add.gis.json");
     let precincts = await loadJson("data/precincts.gis.json");
 
     precinctsLayer = L.geoJSON(precincts, {
@@ -21,21 +29,35 @@ let precinctsLayer;
             }
         },
         onEachFeature: (feature, layer) => {
+            if(addData){
+                let addProps = addData.data[feature.properties[addData.key]];
+                if(addProps) Object.assign(feature.properties, addProps);
+            }
             layer.on({
                 click: e => {
                     let contest = data.contests[selector.selection.contest];
                     let choice = contest.choices[selector.selection.choice];
-                    let precinct = contest.precincts[e.target.feature.properties.PrecinctID];
+                    let precinct = contest.precincts[e.target.feature.properties[precinctIDField]];
+
+                    if(grouped) precinctsLayer.eachLayer(feature => {
+                        if(feature.feature.properties[precinctIDField] == e.target.feature.properties[precinctIDField]) feature.setStyle({
+                            weight: 2,
+                            color: getBorderColor(e.target.options.fillColor)
+                        }).bringToFront();
+                    });
+
                     e.target.setStyle({
                         weight: 2,
                         color: getBorderColor(e.target.options.fillColor)
                     }).bringToFront();
-                    
+
                     let content = "";
 
-                    if(!precinct) content = `<p class="popup-title">${e.target.feature.properties.PrecinctID}<br/></p>No Election Results`;
+                    if(grouped) content += `<p class=\"popup-title\">${e.target.feature.properties[precinctIDField]} → ${e.target.feature.properties[precinctLabelField]}<br/></p>`
+                    else content += `<p class=\"popup-title\">${e.target.feature.properties[precinctLabelField]}<br/></p>`
+
+                    if(!precinct) content += `No Election Results`;
                     else {
-                        content += `<p class=\"popup-title\">${precinct.label}<br/></p>`
                         if(precinct.registeredVoters == 0 && precinct.total == 0) content += "No Registered Voters<br/>";
                         else {
                             if(precinct.total == 0) content += "No Votes<br/";
@@ -68,23 +90,28 @@ let precinctsLayer;
                     L.popup()
                     .setLatLng(e.latlng)
                     .setContent(content)
-                    .on({remove: () => e.target.setStyle({
-                        weight: 1,
-                        color: "#AAAAAA"
-                    })}).openOn(map);
+                    .on({remove: () => {
+                        e.target.setStyle({
+                            weight: 1,
+                            color: "#AAAAAA"
+                        });
+                        
+                        if(grouped) precinctsLayer.eachLayer(feature => {
+                            if(feature.feature.properties[precinctIDField] == e.target.feature.properties[precinctIDField]) feature.setStyle({
+                                weight: 1,
+                                color: "#AAAAAA"
+                            }).bringToFront();
+                        });
+                    }}).openOn(map);
                 }
             });
         }
     }).addTo(map);
     
-    let selector = L.control.ElectionSelector(precinctsLayer, data.contests).addTo(map);
+    let selector = L.control.ElectionSelector(pageTitle, precinctsLayer, data.contests, precinctIDField).addTo(map);
 
     map.fitBounds(precinctsLayer.getBounds());
 })();
-
-async function loadData(){
-    return await loadJson("data/data.json");
-}
 
 async function loadJson(file) {
     let response = await fetch(file);
