@@ -150,7 +150,7 @@ L.Control.ElectionSelector = L.Control.extend({
             let precinct = this._contests[selection.contest].precincts[feature.properties[this._precinctIDField]];
             if(!precinct) return this.styleBlank;
             if(precinct.total == 0) return this._buildStyle({fillColor: 'white'});
-            return this._buildStyle({fillColor: this._colorScale(precinct.total/precinct.registeredVoters)});
+            return this._buildStyle({fillColor: this._colorScale(precinct.total/precinct.registeredVoters/this._contests[selection.contest].voteFor)});
         };
         return feature => {
             let precinct = this._contests[selection.contest].precincts[feature.properties[this._precinctIDField]];

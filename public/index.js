@@ -79,11 +79,17 @@ let data, precinctsLayer;
 
                             content += `Registered Voters: ${precinct.registeredVoters}<br/>`;
 
-                            if(precinct.total == precinct.totalVoters) content += `Turnout: ${(100 * precinct.total / precinct.registeredVoters).toFixed(0)}%<br/>`;
-                            else content += `
-                            Contest Turnout: ${(100 * precinct.total / precinct.registeredVoters).toFixed(0)}%<br/>
-                            Ballot Turnout: ${precinct.totalVoters}/${precinct.registeredVoters} (${(100 * precinct.totalVoters / precinct.registeredVoters).toFixed(0)}%)<br/>
-                            `
+                            if(precinct.total == precinct.totalVoters) {
+                                content += `Turnout: ${(100 * precinct.total / precinct.registeredVoters).toFixed(0)}%<br/>`;
+                            } else {
+                                if(contest.voteFor > 1) {
+                                    content += `Contest Type: Vote For ${contest.voteFor}<br/>`
+                                    content += `Contest Turnout: ${precinct.total}/${precinct.registeredVoters * contest.voteFor} (${(100 * precinct.total / precinct.registeredVoters / contest.voteFor).toFixed(0)}%)<br/>`;
+                                } else {
+                                    content += `Contest Turnout: (${(100 * precinct.total / precinct.registeredVoters).toFixed(0)}%)<br/>`;
+                                }
+                                content += `Ballot Turnout: ${precinct.totalVoters}/${precinct.registeredVoters} (${(100 * precinct.totalVoters / precinct.registeredVoters).toFixed(0)}%)<br/>`;
+                            }
                         }
                     }
 
