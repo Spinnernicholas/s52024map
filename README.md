@@ -1,7 +1,7 @@
 # CocoaCountyMap
 This is an interactive election map with the goal of providing a template that can be used to quickly and easily create interactive election maps for any election.
 
-Try it out [Here](https://spinnernicholas.github.io/CocoaCountyMap/public/index.html)
+Try it out [Here](https://cocoa-county.github.io/CocoaCountyMap/public/)
 
 If you would like more informatino or a demo, please reach out to me on [Twitter](https://twitter.com/NicholasSpinner) or [LinkedIn](https://www.linkedin.com/in/spinnernicholas/).
 
