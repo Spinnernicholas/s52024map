@@ -1,4 +1,4 @@
-const pageTitle = 'Contra Costa County 2024 Primary Election Results';
+const pageTitle = 'Contra Costa County 2024 Presidential Election Results';
 const precinctIDField = 'PrecinctID';
 const precinctLabelField = 'PrecinctID';
 const grouped = false;

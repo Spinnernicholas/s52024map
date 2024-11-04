@@ -72,8 +72,7 @@ L.Control.ElectionSelector = L.Control.extend({
         div.innerHTML = `
         <p>
             <b>${this._title}</b><br/>
-            Created by <a href="https://github.com/Spinnernicholas" target="_blank">Nick Spinner</a>
-            Support this Project <a href="https://www.paypal.com/donate/?hosted_button_id=8TFKEHNMHW93N">Donate</a>
+            Created by <a href="https://github.com/Spinnernicholas" target="_blank">Nick Spinner</a> - <a href="https://github.com/Cocoa-County/CocoaCountyMap">Source Code</a>
         </p>`;
     },
 
