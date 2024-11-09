@@ -29,7 +29,7 @@ let c1 = data['contests'][1];
 let s = {
     "index": 2,
     "id": "10008",
-    "label": "11/09/2024 New Votes",
+    "label": "11/08/2024 New Votes",
     "voteFor": 1,
     "choices": c1.choices,
     "precincts": {}
